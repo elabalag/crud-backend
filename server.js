@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/tasks", taskRoutes);
 
 // MongoDB connection
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = "mongodb+srv://elamuruganbalachandiran:Ela%402002@cluster0.y1kwphe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose
   .connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
