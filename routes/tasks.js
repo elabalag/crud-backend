@@ -1,21 +1,26 @@
-const express = require("express");
-const router = express.Router();
-const Task = require("../models/Task");
+// routes/tasks.js
+import express from "express";
+import Task from "../models/Task.js";
 
-// Get all tasks
+const router = express.Router();
+
+// GET all tasks
 router.get("/", async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find().sort({ createdAt: -1 });
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Create a task
+// POST create a task
 router.post("/", async (req, res) => {
-  const task = new Task({ title: req.body.title });
+  const { title } = req.body;
+  if (!title?.trim()) return res.status(400).json({ message: "Title is required" });
+
   try {
+    const task = new Task({ title });
     const newTask = await task.save();
     res.status(201).json(newTask);
   } catch (err) {
@@ -23,12 +28,15 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update a task's title
+// PUT update task title
 router.put("/:id", async (req, res) => {
+  const { title } = req.body;
+  if (!title?.trim()) return res.status(400).json({ message: "Title is required" });
+
   try {
     const updatedTask = await Task.findByIdAndUpdate(
       req.params.id,
-      { title: req.body.title },
+      { title },
       { new: true }
     );
     if (!updatedTask) return res.status(404).json({ message: "Task not found" });
@@ -38,7 +46,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Toggle completion status
+// PATCH toggle completion
 router.patch("/:id/toggle", async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
@@ -51,7 +59,7 @@ router.patch("/:id/toggle", async (req, res) => {
   }
 });
 
-// Delete a task
+// DELETE task
 router.delete("/:id", async (req, res) => {
   try {
     const deletedTask = await Task.findByIdAndDelete(req.params.id);
@@ -62,4 +70,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
