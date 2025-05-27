@@ -18,18 +18,17 @@ app.use("/tasks", taskRoutes);
 
 // MongoDB connection
 const MONGO_URI = process.env.MONGO_URI;
-
 mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => {
     console.error("❌ DB connection failed:", err.message);
-    process.exit(1); // exit the app if DB connection fails
+    process.exit(1);
   });
 
 // Server start
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
