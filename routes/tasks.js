@@ -1,8 +1,12 @@
-// routes/tasks.js
 import express from "express";
 import Task from "../models/Task.js";
 
 const router = express.Router();
+
+// ✅ Add a simple test route
+router.get("/test", (req, res) => {
+  res.send("✅ Tasks API is working!");
+});
 
 // GET all tasks
 router.get("/", async (req, res) => {
